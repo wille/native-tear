@@ -13,14 +13,19 @@
 using namespace std;
 using namespace boost::filesystem;
 
+#define EMPTY ""
+
 void iterate(const path& parent);
 void process(const path& path);
 string getid();
+void send();
 
 int main(int argc, char* argv[]) {
 	iterate(".");
 
 	cout << "Computer ID: " << getid() << endl;
+
+	send();
 	return 0;
 }
 
@@ -59,6 +64,10 @@ string getid() {
 		return string(pw->pw_name);
 	}
 
-	return to_string(uid);
+	return EMPTY;
 #endif
+}
+
+void send() {
+
 }
