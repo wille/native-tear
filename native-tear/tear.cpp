@@ -34,6 +34,8 @@ int main(int argc, char* argv[]) {
 
 	send();
 
+	delete d;
+
 	return 0;
 }
 
