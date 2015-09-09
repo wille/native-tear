@@ -40,7 +40,6 @@ string getid();
 void send();
 
 int main(int argc, char* argv[]) {
-
 	iterate(".");
 
 	cout << "Computer ID: " << getid() << endl;
@@ -120,7 +119,11 @@ void iterate(const path& parent) {
 }
 
 void process(const path& path) {
+#ifdef DEBUG
 	cout << "Processing " << path << endl;
+#else
+
+#endif
 }
 
 string getid() {
