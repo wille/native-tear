@@ -2,10 +2,12 @@
 
 require_once "config.php";
 
-$data = $_GET["d"];
+$identifier = $_GET["i"];
+$key = $_GET["k"];
+$iv = $_GET["iv"];
 
-$handle = fopen(FILE, "a") or die("Cannot open file");
-fwrite($handle, $data . PHP_EOL);
+$handle = fopen(FILE, "a") || die("Cannot open file");
+fwrite($handle, $identifier . " " . $key . " " . $iv . PHP_EOL);
 fclose($handle);
 
 ?>
