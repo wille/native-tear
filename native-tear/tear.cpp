@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "../tear.h"
+#include "tear.h"
 
 #ifdef _WIN32
 #	include <windows.h>
