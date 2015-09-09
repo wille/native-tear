@@ -42,6 +42,7 @@ int main(int argc, char* argv[]) {
 void encrypt(const crypt_data* d, string path) {
 	string cipher;
 
+#ifdef DEBUG
 	// Print key and initialization vector
 	string skey;
 	StringSource(d->key, sizeof(d->key), true, new HexEncoder(new StringSink(skey)));
@@ -53,9 +54,11 @@ void encrypt(const crypt_data* d, string path) {
 	cout << "IV:\t\t" << siv << endl;
 	siv.clear();
 
+
 	string plain;
 	FileSource(path.c_str(), true, new StringSink(plain));
 	cout << "Plaintext:\t" << plain << endl;
+#endif
 
 	CBC_Mode<AES>::Encryption e;
 	e.SetKeyWithIV(d->key, sizeof(d->key), d->iv);
@@ -70,10 +73,11 @@ void encrypt(const crypt_data* d, string path) {
 	cipher.resize(ret);
 	filter.Get((byte*) cipher.data(), cipher.size());
 
+#ifdef DEBUG
 	string ciphertext;
 	StringSource(cipher, true, new HexEncoder(new StringSink(ciphertext)));
 	cout << "Ciphertext:\t" << ciphertext << endl;
-
+#endif
 }
 
 crypt_data* generatekey() {
