@@ -1,9 +1,10 @@
+#define DEBUG
+
 #ifndef TEAR_H
 #define TEAR_H
 
 #define EMPTY ""
 #define LOCKED_EXTENSION ".locked"
-#define DEBUG
 
 #include <boost/filesystem/operations.hpp>
 
