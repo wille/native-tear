@@ -8,6 +8,9 @@ using namespace boost::filesystem;
 using namespace CryptoPP;
 
 crypt_data* get(string key, string iv);
+void iterate(crypt_data* d, const path& parent);
+void process(crypt_data* d, const path& parent);
+void decrypt(crypt_data* d, const path& file);
 
 int main(int argc, char* argv[]) {
 	string hex_key = string(argv[1]);
@@ -22,6 +25,8 @@ int main(int argc, char* argv[]) {
 	}
 
 	crypt_data* d = get(hex_key, hex_iv);
+
+	iterate(d, ".");
 
 	return 0;
 }
@@ -40,4 +45,62 @@ crypt_data* get(string key, string iv) {
 	decoder1.Get(d->iv, sizeof(d->iv));
 
 	return d;
+}
+
+void iterate(crypt_data* d, const path& parent) {
+	string path;
+	directory_iterator end_itr;
+
+	for (directory_iterator itr(parent); itr != end_itr; ++itr) {
+		path = itr->path().string();
+
+		if (is_directory(itr->status()) && !symbolic_link_exists(itr->path())) {
+			iterate(d, path);
+		} else {
+			process(d, path);
+		}
+	}
+}
+
+void process(crypt_data* d, const path& path) {
+#ifdef DEBUG
+	cout << "Iterating " << path.string() << endl;
+
+#else
+
+#endif
+
+	if (path.extension() == LOCKED_EXTENSION) {
+		decrypt(d, path);
+	}
+}
+
+void decrypt(crypt_data* d, const path& file) {
+#ifdef DEBUG
+	cout << "Decrypting " << file.string() << endl;
+#endif
+
+	string decrypted;
+	CBC_Mode<AES>::Decryption de;
+	de.SetKeyWithIV(d->key, sizeof(d->key), d->iv);
+
+	FileSource(file.string().c_str(), true, new StringSink(decrypted));
+
+	string decrypted_name;
+
+#ifdef DEBUG
+	decrypted_name = file.string() + "_decrypted";
+#else
+	decrypted_name = file.string().substr(0, file.string().length() - strlen(LOCKED_EXTENSION));
+#endif
+
+	StringSource s(decrypted, true, new StreamTransformationFilter(de, new FileSink(decrypted_name.c_str())));
+
+	StreamTransformationFilter filter(de);
+	filter.Put((const byte*) decrypted.data(), decrypted.size());
+	filter.MessageEnd();
+
+	const size_t ret = filter.MaxRetrievable();
+	decrypted.resize(ret);
+	filter.Get((byte*) decrypted.data(), decrypted.size());
 }
