@@ -41,6 +41,9 @@ int main(int argc, char* argv[]) {
 
 void encrypt(const crypt_data* d, string path) {
 	string cipher;
+	string plain;
+
+	FileSource(path.c_str(), true, new StringSink(plain));
 
 #ifdef DEBUG
 	// Print key and initialization vector
@@ -54,9 +57,6 @@ void encrypt(const crypt_data* d, string path) {
 	cout << "IV:\t\t" << siv << endl;
 	siv.clear();
 
-
-	string plain;
-	FileSource(path.c_str(), true, new StringSink(plain));
 	cout << "Plaintext:\t" << plain << endl;
 #endif
 
