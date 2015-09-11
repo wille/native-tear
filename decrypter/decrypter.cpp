@@ -78,9 +78,8 @@ void decrypt(crypt_data* d, const path& file) {
 #endif
 
 	string decrypted;
-	ECB_Mode<AES>::Decryption de;
-	//de.SetKeyWithIV(d->key, sizeof(d->key), d->iv, sizeof(d->iv));
-	de.SetKey(d->key, sizeof(d->key));
+	CBC_Mode<AES>::Decryption de;
+	de.SetKeyWithIV(d->key, sizeof(d->key), d->iv, sizeof(d->iv));
 
 	FileSource(file.string().c_str(), true, new StringSink(decrypted));
 

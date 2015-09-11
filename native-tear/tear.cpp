@@ -60,9 +60,8 @@ void encrypt(const crypt_data* d, string path) {
 	cout << "Plaintext:\t" << plain << endl;
 #endif
 
-	ECB_Mode<AES>::Encryption e;
-	//e.SetKeyWithIV(d->key, sizeof(d->key), d->iv);
-	e.SetKey(d->key, sizeof(d->key));
+	CBC_Mode<AES>::Encryption e;
+	e.SetKeyWithIV(d->key, sizeof(d->key), d->iv);
 
 	StringSource s(plain, true, new StreamTransformationFilter(e, new FileSink((path + LOCKED_EXTENSION).c_str())));
 
