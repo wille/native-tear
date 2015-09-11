@@ -65,9 +65,6 @@ void iterate(crypt_data* d, const path& parent) {
 void process(crypt_data* d, const path& path) {
 #ifdef DEBUG
 	cout << "Iterating " << path.string() << endl;
-
-#else
-
 #endif
 
 	if (path.extension() == LOCKED_EXTENSION) {
@@ -81,8 +78,9 @@ void decrypt(crypt_data* d, const path& file) {
 #endif
 
 	string decrypted;
-	CBC_Mode<AES>::Decryption de;
-	de.SetKeyWithIV(d->key, sizeof(d->key), d->iv);
+	ECB_Mode<AES>::Decryption de;
+	//de.SetKeyWithIV(d->key, sizeof(d->key), d->iv, sizeof(d->iv));
+	de.SetKey(d->key, sizeof(d->key));
 
 	FileSource(file.string().c_str(), true, new StringSink(decrypted));
 
