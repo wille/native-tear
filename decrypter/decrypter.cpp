@@ -77,11 +77,8 @@ void decrypt(crypt_data* d, const path& file) {
 	cout << "Decrypting " << file.string() << endl;
 #endif
 
-	string decrypted;
-	CBC_Mode<AES>::Decryption de;
-	de.SetKeyWithIV(d->key, sizeof(d->key), d->iv, sizeof(d->iv));
-
-	FileSource(file.string().c_str(), true, new StringSink(decrypted));
+	string cipher;
+	FileSource(file.string().c_str(), true, new StringSink(cipher));
 
 	string decrypted_name;
 
@@ -91,13 +88,13 @@ void decrypt(crypt_data* d, const path& file) {
 	decrypted_name = file.string().substr(0, file.string().length() - strlen(LOCKED_EXTENSION));
 #endif
 
-	StringSource s(decrypted, true, new StreamTransformationFilter(de, new FileSink(decrypted_name.c_str())));
+	string decrypted;
+	CBC_Mode<AES>::Decryption dk;
+	dk.SetKeyWithIV(d->key, sizeof(d->key), d->iv);
 
-	StreamTransformationFilter filter(de);
-	filter.Put((const byte*) decrypted.data(), decrypted.size());
-	filter.MessageEnd();
+	StringSource ss(cipher, true, new StreamTransformationFilter(dk, new StringSink(decrypted)));
 
-	const size_t ret = filter.MaxRetrievable();
-	decrypted.resize(ret);
-	filter.Get((byte*) decrypted.data(), decrypted.size());
+	//StringSource ss(cipher, true, new StreamTransformationFilter(dk, new FileSink(decrypted_name.c_str())));
+
+	cout << "Decrypted text: " << decrypted << endl;
 }
