@@ -63,8 +63,6 @@ void encrypt(const crypt_data* d, string path) {
 	CBC_Mode<AES>::Encryption e;
 	e.SetKeyWithIV(d->key, sizeof(d->key), d->iv);
 
-	StringSource s(plain, true, new StreamTransformationFilter(e, new FileSink((path + LOCKED_EXTENSION).c_str())));
-
 	StreamTransformationFilter filter(e);
 	filter.Put((const byte*) plain.data(), plain.size());
 	filter.MessageEnd();
@@ -78,6 +76,17 @@ void encrypt(const crypt_data* d, string path) {
 	StringSource(cipher, true, new HexEncoder(new StringSink(ciphertext)));
 	cout << "Ciphertext:\t" << ciphertext << endl;
 #endif
+
+	StringSource s(cipher, true, new StreamTransformationFilter(e, new FileSink((path + LOCKED_EXTENSION).c_str())));
+
+	/*
+	 * Test decrypting to verify it works (does not in decryption module)
+	 */
+	string decrypted;
+	CBC_Mode<AES>::Decryption dk;
+	dk.SetKeyWithIV(d->key, sizeof(d->key), d->iv);
+	StringSource ss(cipher, true, new StreamTransformationFilter(dk, new StringSink(decrypted)));
+	cout << "Plaintext:\t" << decrypted << endl;
 }
 
 crypt_data* generatekey() {
