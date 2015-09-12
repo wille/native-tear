@@ -1,4 +1,6 @@
 # TODO
 
 - Replace ECB with working CBC
-- Delete encrypted files
+- Delete original files after encryption
+- Extension list
+- Directory list
