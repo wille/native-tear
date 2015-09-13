@@ -17,7 +17,7 @@
 #include <cryptopp/aes.h>
 #include <cryptopp/ccm.h>
 
-#define KEY_LEN CryptoPP::AES::DEFAULT_KEYLENGTH
+#define KEY_LEN 32 // 256 bits
 #define IV_LEN CryptoPP::AES::BLOCKSIZE
 
 struct crypt_data {
