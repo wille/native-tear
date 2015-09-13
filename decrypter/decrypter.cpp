@@ -94,7 +94,11 @@ void decrypt(crypt_data* d, const path& file) {
 
 	StringSource ss(cipher, true, new StreamTransformationFilter(dk, new StringSink(decrypted)));
 
-	//StringSource ss(cipher, true, new StreamTransformationFilter(dk, new FileSink(decrypted_name.c_str())));
+	std::ofstream ofile(decrypted_name.c_str(), std::ios::binary);
+	ofile.write(decrypted.c_str(), decrypted.length());
+	ofile.close();
 
+#ifdef DEBUG
 	cout << "Decrypted text: " << decrypted << endl;
+#endif
 }
