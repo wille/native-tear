@@ -9,9 +9,10 @@ Written for Windows and Linux (currently)
 * Encrypted files can be decrypted in decryption program with encryption key (and IV)
 * Runs on any platform supported by crypto++ and boost
 
-# Usage
+## Usage
 
-Refer to [config.h](native-tear/config.h)
+- [config.h](native-tear/config.h)
+- [config.php](web/config.php)
 
 #Legal Warning
 
