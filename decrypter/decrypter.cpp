@@ -63,22 +63,22 @@ void iterate(crypt_data* d, const path& parent) {
 }
 
 void process(crypt_data* d, const path& path) {
-#ifdef DEBUG
-	cout << "Iterating " << path.string() << endl;
-#endif
-
 	if (path.extension() == LOCKED_EXTENSION) {
 		decrypt(d, path);
 	}
 }
 
+#include <sstream>
 void decrypt(crypt_data* d, const path& file) {
 #ifdef DEBUG
 	cout << "Decrypting " << file.string() << endl;
 #endif
 
 	string cipher;
-	FileSource(file.string().c_str(), true, new StringSink(cipher));
+	std::ifstream ifile(file.string().c_str(), std::ios::binary);
+	std::stringstream sss;
+	sss << ifile.rdbuf();
+	cipher = sss.str();
 
 	string decrypted_name;
 
