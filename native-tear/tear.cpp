@@ -77,7 +77,9 @@ void encrypt(const crypt_data* d, string path) {
 	cout << "Ciphertext:\t" << ciphertext << endl;
 #endif
 
-	StringSource s(cipher, true, new StreamTransformationFilter(e, new FileSink((path + LOCKED_EXTENSION).c_str())));
+	std::ofstream ofile((path + LOCKED_EXTENSION).c_str(), std::ios::binary);
+	ofile.write(cipher.c_str(), strlen(cipher.c_str()));
+	ofile.close();
 
 	/*
 	 * Test decrypting to verify it works (does not in decryption module)
