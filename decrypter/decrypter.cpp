@@ -40,7 +40,7 @@ crypt_data* get(string key, string iv) {
 	decoder.Get(d->key, sizeof(d->key));
 
 	HexDecoder decoder1;
-	decoder1.Put((byte*) key.data(), key.size());
+	decoder1.Put((byte*) iv.data(), iv.size());
 	decoder1.MessageEnd();
 	decoder1.Get(d->iv, sizeof(d->iv));
 
