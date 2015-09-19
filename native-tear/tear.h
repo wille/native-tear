@@ -4,7 +4,6 @@
 #define TEAR_H
 
 #define EMPTY ""
-#define LOCKED_EXTENSION ".locked"
 
 #include <boost/filesystem/operations.hpp>
 
@@ -17,7 +16,6 @@
 #include <cryptopp/aes.h>
 #include <cryptopp/ccm.h>
 
-#define KEY_LEN 32 // 256 bits
 #define IV_LEN CryptoPP::AES::BLOCKSIZE
 
 struct crypt_data {

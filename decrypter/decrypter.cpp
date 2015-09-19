@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 
+#include "../native-tear/config.h"
 #include "../native-tear/tear.h"
 
 using namespace std;

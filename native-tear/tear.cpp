@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 
+#include "config.h"
 #include "tear.h"
 
 #ifdef _WIN32
