@@ -146,7 +146,7 @@ string get_username() {
 	GetUserName(username, &length);
 
 	return string(username);
-#elif defined(__linux__)
+#else
 	struct passwd *pw;
 
 	uid_t uid = geteuid();
