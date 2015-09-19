@@ -149,7 +149,7 @@ string get_home() {
 	string path;
 
 	char* drive = getenv("USERPROFILE");
-	if (drive == nullptr) {
+	if (drive == NULL) {
 		throw runtime_error("USERPROFILE environment variable not found");
 	} else {
 		path = drive;
