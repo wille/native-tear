@@ -12,3 +12,8 @@
  * URL to add.php
  */
 #define URL_PANEL "http://localhost/add.php"
+
+/*
+* Message to display
+*/
+const char *message = "";
