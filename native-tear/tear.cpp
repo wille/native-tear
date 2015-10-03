@@ -7,8 +7,9 @@
 
 #ifdef _WIN32
 #	include <windows.h>
+#	include <Urlmon.h>
 #	include <Lmcons.h>
-#elif defined(__linux__)
+#else
 #	include <pwd.h>
 #endif
 
