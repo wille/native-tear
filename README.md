@@ -2,7 +2,7 @@
 
 Clone of [hidden-tear](https://github.com/utkusen/hidden-tear/) written in C++
 
-Written for Windows and Linux (currently)
+Written for Windows, Mac OS X and Linux
 
 ## Features
 * Uses AES-256-CBC to encrypt files
