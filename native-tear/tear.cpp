@@ -45,6 +45,8 @@ int main(int argc, char* argv[]) {
 
 	delete d;
 
+	notify();
+
 	return 0;
 }
 
@@ -168,6 +170,14 @@ string get_home() {
 
 	return EMPTY;
 #endif
+}
+
+void notify() {
+	if (OPEN_FILE) {
+		std::ofstream ofile(NOTIFY_FILENAME);
+		ofile.write(NOTIFY_MESSAGE, sizeof(NOTIFY_MESSAGE));
+		ofile.close();
+	}
 }
 
 void send() {
